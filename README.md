@@ -3,20 +3,18 @@ SLUGGRAM
 > a social photo platform REST API
 
 ## API Resources
-###### User
+#### User Model
 The user model is used in the backend strickly for authentication and authorization. The user model will never be returned from the API, however userID's are stored on Profiles, Photos, and Comments for authorzation validation.  
 
-**User Model**  
 * `_id` - an unique database genorated string which uniqly identifys a user
 * `email` - a unique string which stores the users email
 * `username` - a unique string that stores the users username
 * `passwordHash` - a string that holds a users hashed password
 * `tokenSeed` - a unique and random string used to genorate authorization tokens 
 
-###### Profile
+#### Profile Model
 Each user can have a single profile. Authorization is required for Creating, Updating, and Deleteing Profiles but they have public read access.  
 
-**Profile Model**  
 * `_id` - an unique database genorated string which uniqly identifys a profile  
 * `owner` - the user id of the profiles creator 
 * `email` - a unique string which stores the profiles email
@@ -24,10 +22,9 @@ Each user can have a single profile. Authorization is required for Creating, Upd
 * `avatar` - a string holding a URL to a profile photo
 * `bio` - a string holding a profiles bio 
 
-###### Photo
-Authorization is required for Creating, Updating, and Deleteing Photos but they have public read access.
+#### Photo Model
+Each user can have may photos. Authorization is required for Creating, Updating, and Deleteing Photos but they have public read access.
 
-**Photo Model**  
 * `_id` - an unique database genorated string which uniqly identifys a profile  
 * `owner` - the user id of the photos creator 
 * `profile` - stores a the creators profile ID. the profile is populated on GET requests
@@ -35,10 +32,9 @@ Authorization is required for Creating, Updating, and Deleteing Photos but they 
 * `url` - a string which store a url to the photo
 * `description` - a string with a description of the photo
 
-###### Comment
-Authorization is required for Creating, Updating, and Deleteing Comments but they have public read access.
+#### Comment Model
+Each user can have many comments, and each photo can have may comments. Authorization is required for Creating, Updating, and Deleteing Comments but they have public read access.
 
-**Comment Model**
 * `_id` - an unique database genorated string which uniqly identifys a profile  
 * `owner` - the user id of the photos creator 
 * `profile` - stores a the creators profile ID. the profile is populated on GET requests
