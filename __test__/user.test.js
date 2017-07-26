@@ -33,7 +33,7 @@ describe('USER', () => {
       })
     })
 
-    test('should reject with no username data', () {
+    test('should reject with no username data', () => {
 
     })
   })
