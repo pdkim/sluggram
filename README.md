@@ -79,7 +79,6 @@ a HTTP POST request to /signup will create a new user account.
 * Request Body
   * JSON containing a username, email and password
 
-example request body
 ``` json 
 {
   "username": "slugbyte",
@@ -103,6 +102,15 @@ The response body will be a **bearer token**.
 
 ## Profiles
 #### POST `/profiles`
+A HTTP POST request to /profiles will create a new profile
+###### request 
+* Expected Headers
+  * Bearer authorization
+  * Content-Type: application/json
+
+###### response 
+the response will be a JSON profile
+
 #### GET `/profiles`
 #### GET `/profiles/:id`
 #### PUT `/profiles/:id`
