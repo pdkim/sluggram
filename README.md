@@ -70,6 +70,9 @@ let headers = {
 }
 ```
 
+---
+
+
 #### POST `/signup`
 a HTTP POST request to /signup will create a new user account.
 
@@ -89,6 +92,8 @@ a HTTP POST request to /signup will create a new user account.
 
 ###### response
 The response body will be a **bearer token**.
+
+--- 
 
 #### GET `/login`
 A HTTP GET request to /login will login (fetch a token) to an existing user account.
@@ -115,6 +120,8 @@ A HTTP POST request to /profiles will create a new profile. A Profile cannot be 
 ###### response 
 the response will be a JSON profile
 
+---
+
 #### GET `/profiles`
 a HTTP GET request to /profiles will return an array of profiles
 ###### request 
@@ -126,10 +133,14 @@ a HTTP GET request to /profiles will return an array of profiles
 ###### response
 the response will be a JSON array of profiles
 
+---
+
 #### GET `/profiles/:id`
 a HTTP GET request to /profiles/:id  will return a profile
 ###### response
 the response will return a JSON profile 
+
+---
 
 #### PUT `/profiles/:id`
 a HTTP PUT request to /profiles/:id will update a profile
@@ -143,6 +154,8 @@ a HTTP PUT request to /profiles/:id will update a profile
 
 ###### response
 the response will return a JSON profile 
+
+---
 
 #### DELETE `/profiles/:id`
 a HTTP DELETE request to /profiles/:id will delete a profile
