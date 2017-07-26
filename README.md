@@ -45,10 +45,10 @@ Each user can have many comments, and each photo can have may comments. Authoriz
 Sluggram uses Basic authentication and Bearer authorization to enforce access controls. Basic and Bearer auth both use the HTTP `Authorization` header to pass credentials on a request.
 
 #### Basic Authentication
-Once a user account has been created. Basic Authentication can be used to make a request on behalf of the account. To create a Basic Authorzation Header the client must base64 encode a string with the username and password seporated by a colon. Then the encoded string can then be appened to the string `'Basic '` and set to an `Authorization` header on an HTTP Request.    
+Once a user account has been created Basic Authentication can be used to make a request on behalf of the account. To create a Basic Authorzation Header the client must base64 encode a string with the username and password seporated by a colon. Then the encoded string can then be appened to the string `'Basic '` and set to an `Authorization` header on an HTTP Request.    
 
 ``` javascript
-// Example of formating a Basic Authentication in Javascript 
+// Example of formating a Basic Authentication header in Javascript 
 let username = 'slugbyte'
 let password = 'abcd1234'
 
@@ -59,7 +59,16 @@ let headers = {
 ```
 
 #### Bearer Authorization
+After a successfull signup or login request the client will receive a token. Bearer Authorization uses that token to make a request on behalf of that user account. The token should be append to the string `'Bearer '` and set to an Authorization header on an HTTP Request.
 
+``` javascript
+// Example of formating a Bearer Authorization header in Javascript
+let token = '11983261983261982643918649814613298619823698243'
+
+let headers = {
+  Authorization: `Beaer ${token}`
+}
+```
 
 #### POST `/login`
 
