@@ -70,9 +70,25 @@ let headers = {
 }
 ```
 
-#### POST `/login`
+#### POST `/signup`
+a HTTP POST request /signup will create a new user account.
+###### request 
+The request should send JSON in the body of the POST request. The JSON should contain a username, email, and password for the new user account.
 
-#### GET `/signup`
+example request body
+``` json 
+{
+  "username": "slugbyte",
+  "email": "slugbyte@slugbyte.com",
+  "password": "abcd1234"
+}
+```
+
+###### response
+The response will be a bearer TOKEN.
+
+
+#### GET `/login`
 
 ## Profiles
 #### POST `/profiles`
