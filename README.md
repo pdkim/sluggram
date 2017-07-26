@@ -70,6 +70,9 @@ let headers = {
 }
 ```
 
+---
+
+
 #### POST `/signup`
 a HTTP POST request to /signup will create a new user account.
 
