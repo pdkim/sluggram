@@ -102,19 +102,52 @@ The response body will be a **bearer token**.
 
 ## Profiles
 #### POST `/profiles`
-A HTTP POST request to /profiles will create a new profile
+A HTTP POST request to /profiles will create a new profile. A Profile cannot be created until the User has created a profile.
+
 ###### request 
 * Expected Headers
   * Bearer authorization
-  * Content-Type: application/json
+  * Content-Type: multipart/form-data
+* Expected Body 
+  * a `bio` field containing string with the users bio
+  * a `image` filed with the users avatar image
 
 ###### response 
 the response will be a JSON profile
 
 #### GET `/profiles`
+a HTTP GET request to /profiles will return an array of profiles
+###### request 
+* Optional Query Paramiters
+  * SEE PAGINATION
+  * SEE FUZZY SEARCH
+    * username is the only searchble property
+
+###### response
+the response will be a JSON array of profiles
+
 #### GET `/profiles/:id`
+a HTTP GET request to /profiles/:id  will return a profile
+###### response
+the response will return a JSON profile 
+
 #### PUT `/profiles/:id`
+a HTTP PUT request to /profiles/:id will update a profile
+###### request 
+* Expected Headers
+  * Bearer authorization
+  * Content-Type: multipart/form-data
+* Optional Body Fields
+  * a `bio` field containing string with the users bio
+  * a `image` filed with the users avatar image
+
+###### response
+the response will return a JSON profile 
+
 #### DELETE `/profiles/:id`
+a HTTP DELETE request to /profiles/:id will delete a profile
+###### response
+the response will have no body and a status of **204**
 
 ## Photos 
 #### POST `/photos`
