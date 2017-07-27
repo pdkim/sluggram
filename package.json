@@ -5,6 +5,12 @@
   "repository": "git@github.com:slugbyte/sluggram.git",
   "author": "Duncan Marsh <dwolfm@gmail.com>",
   "license": "MIT",
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/src/__test__/lib/test.env.js"
+    ],
+    "globals": { }
+  },
   "scripts": {
     "lint": "eslint .",
     "start": "node index.js",
