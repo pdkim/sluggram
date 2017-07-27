@@ -1,8 +1,9 @@
 'use strict'
 
 // DEPENDECIES
+import * as bcrypt from 'bcrypt'
 import {randomBytes} from 'crypto'
-import {hash, compare} from 'bcrypt'
+import * as jwt from 'jsonwebtoken'
 import createError from 'http-errors'
 import Mongoose, {Schema} from 'mongoose'
 
@@ -14,32 +15,33 @@ const userSchema =  new Schema({
   randomHash: {type: String,  unique: true, default: ''},
 })
 
-userSchema.methods.passwordCompare = (password) => {
+// INSTANCE METHODS
+userSchema.methods.passwordCompare = function(password){
   return bcrypt.compare(password, this.passwordHash)
   .then(success => {
     if (!success)
       throw createError(401, 'USER ERROR: wrong password')
+    return this
   })
 }
 
-userSchema.methods.tokenCreate  = () => {
-  return new Promise((resolve, reject) => {
-    this.randomHash = randomBytes(32).toString('base64')
-    this.save()
-    .then(user => 
-      jwt.sign({randomHash}, process.env.APP_SECRET))
+userSchema.methods.tokenCreate  = function(){
+  this.randomHash = randomBytes(32).toString('base64')
+  return this.save()
+  .then(user => {
+    return jwt.sign({randomHash: this.randomHash}, process.env.SECRET)
   })
-
 }
 
 // MODEL
 const User = Mongoose.model('user', userSchema)
 
-User.create = (user) => {
+// STATIC METHODS
+User.create = function (user) {
   let {password} = user
   user = Object.assign({}, user, {password: undefined})
 
-  return hash(password, 1)
+  return bcrypt.hash(password, 1)
   .then(passwordHash => {
     let data = Object.assign({}, user, {passwordHash}) 
     return new User(data).save()
@@ -47,4 +49,5 @@ User.create = (user) => {
   .catch(err => createError(400, err.message))
 }
 
+// INTERFACE
 export default User

@@ -3,13 +3,23 @@
 import * as db from '../lib/db.js'
 import {compare} from 'bcrypt'
 import User from '../model/user.js'
-
-const MONGO_URI = 'mongodb://localhost/testing'
+import {mockUser} from './lib/mock-user.js'
 
 describe('USER', () => {
-  beforeAll(() => db.start({MONGO_URI}))
+  beforeAll(() => db.start())
   afterAll(db.stop)
   afterEach(() => User.remove({}))
+
+  describe('mockUser', () => {
+    test('should resolve a password, user, and token', () => {
+      return mockUser()
+      .then(({password, user, token}) => {
+        expect(token).toBeTruthy()
+        expect(password).toBeTruthy()
+        expect(user).toBeTruthy()
+      })
+    })
+  })
 
   describe('%create', () => {
     test('should not reject with valid data', () => {
@@ -50,6 +60,35 @@ describe('USER', () => {
           expect(err).toBeInstanceOf(Error)
           expect(err.status).toBe(400)
         })
+      })
+    })
+  })
+
+  describe('#tokenCreate', () => {
+    test('should create a new token', () => {
+      let tokenCache
+      return mockUser()
+      .then(({token, user}) => {
+        tokenCache = token
+        return user.tokenCreate()
+      })
+      .then((token) => {
+        expect(token).toBeTruthy()
+        expect(token).not.toEqual(tokenCache)
+      })
+    })
+  })
+
+  describe('#passwordCompare', () => {
+    test('to resolve the user', () => {
+      let userCache
+      return mockUser()
+      .then(({password, user}) => {
+        userCache = user
+        return user.passwordCompare(password)
+      })
+      .then((user) => {
+        expect(user).toEqual(userCache)
       })
     })
   })
