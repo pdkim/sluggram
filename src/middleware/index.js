@@ -2,5 +2,6 @@
 
 const {Router} = require('express')
 
-const middleware = module.exports = new Router()
+const middleware = new Router()
 
+export default middleware

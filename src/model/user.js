@@ -34,7 +34,7 @@ userSchema.methods.tokenCreate  = () => {
 }
 
 // MODEL
-const User = module.exports = mongoose.model('user', userSchema)
+const User = mongoose.model('user', userSchema)
 
 User.create = (user) => {
   let {password} = user
@@ -47,3 +47,4 @@ User.create = (user) => {
   })
 }
 
+export default User

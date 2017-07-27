@@ -1,8 +1,8 @@
 'use stirct'
 
-const db = require('../lib/db')
-const {compare} = require('bcrypt')
-const User = require('../model/user.js')
+import * as db from '../lib/db.js'
+import {compare} from 'bcrypt'
+import User from '../model/user.js'
 
 const MONGODB_URI = 'mongodb://localhost/testing'
 

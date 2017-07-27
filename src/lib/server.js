@@ -1,44 +1,41 @@
 'use strict'
 
-const db = require('./db.js')
-const express = require('express')
-const middleware = require('../middleware')
+import * as db from './db'
+import express from 'express'
+import middleware from '../middleware'
 
-const app = express()
-app.use(middleware)
-
-const server = module.exports = {
+const app = express().use(middleware)
+const state = {
   isOn: false, 
   http: null,
 }
 
-server.start = (config) => {
-    return new Promise((resolve, reject) => {
-      if (server.isOn) 
-        return reject(new Error('USAGE ERROR: the server is on'))
-      server.isOn = true
-      db.start(config.MONGO_URI)
-      .then(() => {
-        server.http = app.listen(config.PORT, () => {
-
-          console.log('__SERVER_UP__', config.PORT)
-          resolve()
-        })
+export const start = (config) => {
+  return new Promise((resolve, reject) => {
+    if (state.isOn) 
+      return reject(new Error('USAGE ERROR: the state is on'))
+    state.isOn = true
+    db.start(config.MONGO_URI)
+    .then(() => {
+      state.http = app.listen(config.PORT, () => {
+        console.log('__SERVER_UP__', config.PORT)
+        resolve()
       })
-      .catch(reject)
     })
+    .catch(reject)
+  })
 }
 
-server.stop = () => {
+export const stop = () => {
   return new Promise((resolve, reject) => {
-    if(!server.isOn)
-      return reject(new Error('USAGE ERROR: the server is off'))
+    if(!state.isOn)
+      return reject(new Error('USAGE ERROR: the state is off'))
     return db.stop()
     .then(() => {
-      server.http.close(() => {
+      state.http.close(() => {
         console.log('__SERVER_DOWN__')
-        server.isOn = false
-        server.http = null
+        state.isOn = false
+        state.http = null
         resolve()
       })
     })
