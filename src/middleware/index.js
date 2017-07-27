@@ -1,7 +1,6 @@
 'use strict'
 
-const {Router} = require('express')
-
+import {Router} from 'express'
 const middleware = new Router()
 
 export default middleware
