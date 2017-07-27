@@ -1,6 +1,9 @@
 'use strict'
 
-import {Router} from 'express'
-const middleware = new Router()
+import fourOhFour from './four-oh-four.js'
+import errorHandler from './error-handler.js'
 
-export default middleware
+export default [
+  fourOhFour, 
+  errorHandler,
+]

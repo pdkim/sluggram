@@ -1,12 +1,10 @@
 'use strict'
 
 // DEPENDECIES
-const {randomBytes} = require('crypto')
-const {hash, compare} = require('bcrypt')
-const createError = require('http-errors')
-const {Schema } = require('mongoose')
-const mongoose = require('mongoose')
-mongoose.Promise = Promise
+import {randomBytes} from 'crypto'
+import {hash, compare} from 'bcrypt'
+import createError from 'http-errors'
+import Mongoose, {Schema} from 'mongoose'
 
 // SCHEMA
 const userSchema =  new Schema({
@@ -31,10 +29,11 @@ userSchema.methods.tokenCreate  = () => {
     .then(user => 
       jwt.sign({randomHash}, process.env.APP_SECRET))
   })
+
 }
 
 // MODEL
-const User = mongoose.model('user', userSchema)
+const User = Mongoose.model('user', userSchema)
 
 User.create = (user) => {
   let {password} = user
@@ -45,6 +44,7 @@ User.create = (user) => {
     let data = Object.assign({}, user, {passwordHash}) 
     return new User(data).save()
   })
+  .catch(err => createError(400, err.message))
 }
 
 export default User

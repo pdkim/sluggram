@@ -1,13 +1,19 @@
-'use strict'
+export const partial = (fn, ...defaults) => 
+  (...args) => fn(...defaults, ...args)
 
-util = module.exports = {}
+export const partialRight = (fn, ...defaults) => 
+  (...args) => fn(...args, ...defaults)
 
-logger = fn => name => (...args) => {
-  console.log(`__${name}__`, ...args)
-  return args.join(' ')
-}
+export const compose = (...fns) => 
+  (arg) => fns.reduce((result, next) => next(result), arg)
 
-util.log = (...args) => logger(console.log)(...args)
-util.log('cool')('yo!','whats up')
+export const promisify = (fn) => (...args) => 
+  new Promise((resolve, reject) => 
+    fn(...args, (err, data) => err ? reject(err) : resolve(data)))
 
-util.logError = (...args) => logger(console.error)
+export const log = (...args) => 
+  process.env.DEBUG === 'true' ?  console.log(...args): undefined
+
+export const logError = (...args) =>  
+  process.env.DEBUG === 'true' ? console.error(...args) : undefined
+

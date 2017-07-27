@@ -4,10 +4,10 @@ import * as db from '../lib/db.js'
 import {compare} from 'bcrypt'
 import User from '../model/user.js'
 
-const MONGODB_URI = 'mongodb://localhost/testing'
+const MONGO_URI = 'mongodb://localhost/testing'
 
 describe('USER', () => {
-  beforeAll(() => db.start(MONGODB_URI))
+  beforeAll(() => db.start({MONGO_URI}))
   afterAll(db.stop)
   afterEach(() => User.remove({}))
 
@@ -33,10 +33,24 @@ describe('USER', () => {
       })
     })
 
-    test('should reject with no username data', () => {
+    test('should reject with no invalid data', () => {
+      let data = {
+        username: 'testuser', 
+        password: 'abcd1234',
+        email: 'testuser@example.com'
+      }
 
+      return Promise.all([
+        User.create({...data, username: undefined}).catch(err => err),
+        User.create({...data, email: undefined}).catch(err => err),
+        User.create({...data, password: undefined}).catch(err => err),
+      ])
+      .then(errors => {
+        errors.forEach(err => {
+          expect(err).toBeInstanceOf(Error)
+          expect(err.status).toBe(400)
+        })
+      })
     })
   })
-
-
 })

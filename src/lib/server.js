@@ -3,22 +3,24 @@
 import * as db from './db'
 import express from 'express'
 import middleware from '../middleware'
+import {log, logError} from './util.js'
 
 const app = express().use(middleware)
+
 const state = {
   isOn: false, 
   http: null,
 }
 
-export const start = (config) => {
+export const start = ({PORT, MONGO_URI}) => {
   return new Promise((resolve, reject) => {
     if (state.isOn) 
       return reject(new Error('USAGE ERROR: the state is on'))
     state.isOn = true
-    db.start(config.MONGO_URI)
+    db.start({MONGO_URI})
     .then(() => {
-      state.http = app.listen(config.PORT, () => {
-        console.log('__SERVER_UP__', config.PORT)
+      state.http = app.listen(PORT, () => {
+        log('__SERVER_UP__', PORT)
         resolve()
       })
     })
@@ -33,7 +35,7 @@ export const stop = () => {
     return db.stop()
     .then(() => {
       state.http.close(() => {
-        console.log('__SERVER_DOWN__')
+        log('__SERVER_DOWN__')
         state.isOn = false
         state.http = null
         resolve()
