@@ -20,7 +20,7 @@ userSchema.methods.passwordCompare = function(password){
   return bcrypt.compare(password, this.passwordHash)
   .then(success => {
     if (!success)
-      throw createError(401, 'USER ERROR: wrong password')
+      throw createError(401, 'AUTH ERROR: wrong password')
     return this
   })
 }
@@ -38,6 +38,10 @@ const User = Mongoose.model('user', userSchema)
 
 // STATIC METHODS
 User.create = function (user) {
+  if(!user.password || !user.email || !user.username)
+    return Promise.reject(
+      createError(400, 'VALIDATION ERROR: missing username email or password '))
+
   let {password} = user
   user = Object.assign({}, user, {password: undefined})
 
@@ -46,7 +50,6 @@ User.create = function (user) {
     let data = Object.assign({}, user, {passwordHash}) 
     return new User(data).save()
   })
-  .catch(err => createError(400, err.message))
 }
 
 // INTERFACE
