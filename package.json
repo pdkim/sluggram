@@ -7,7 +7,8 @@
   "license": "MIT",
   "jest": {
     "setupFiles": [
-      "<rootDir>/src/__test__/lib/test.env.js"
+      "<rootDir>/src/__test__/lib/test.env.js",
+      "<rootDir>/src/__test__/lib/mock-s3.js"
     ]
   },
   "scripts": {
@@ -19,6 +20,8 @@
     "db-off": "killall mongod"
   },
   "dependencies": {
+    "aws-sdk": "^2.92.0",
+    "aws-sdk-mock": "^1.7.0",
     "babel": "^6.23.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
@@ -33,6 +36,7 @@
     "dotenv": "^4.0.0",
     "express": "^4.15.3",
     "faker": "^4.1.0",
+    "fs-extra": "^4.0.0",
     "http-errors": "^1.6.1",
     "json-parser": "^1.1.5",
     "jsonwebtoken": "^7.4.1",

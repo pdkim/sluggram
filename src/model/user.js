@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt'
 import {randomBytes} from 'crypto'
 import * as jwt from 'jsonwebtoken'
 import createError from 'http-errors'
+import {promisify} from '../lib/util.js'
 import Mongoose, {Schema} from 'mongoose'
 
 // SCHEMA
@@ -29,7 +30,7 @@ userSchema.methods.tokenCreate  = function(){
   this.randomHash = randomBytes(32).toString('base64')
   return this.save()
   .then(user => {
-    return jwt.sign({randomHash: this.randomHash}, process.env.SECRET)
+    return promisify(jwt.sign)({randomHash: this.randomHash}, process.env.SECRET)
   })
 }
 
