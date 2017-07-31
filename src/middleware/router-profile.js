@@ -11,8 +11,7 @@ export default new Router()
   .catch(next)
 })
 .get('/profiles', (req, res, next) => {
-  let page = Number(req.query.page) || 1
-  Profile.getPage(page > 0 ? page : 1)
+  Profile.getPage(req)
   .then(profiles => res.json(profiles))
   .catch(next)
 })

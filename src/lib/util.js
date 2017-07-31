@@ -53,3 +53,23 @@ export const s3UploadMulterFileAndClean = (data) => {
   .catch(err => fs.remove(data.path).then(() => {throw err}))
   .then(s3Data => fs.remove(data.path).then(() => s3Data))
 }
+
+export const pagerCreate = (model) => (req) => {
+  let num = Number(req.query.page) || 1
+  num--
+  let pageCount = 100
+  return model.count()
+  .then(count => {
+    let remaining = count - num * pageCount  
+    return model.find({})
+    .skip(num > 0 ? num * pageCount : 0)
+    .limit(pageCount)
+    .then(profiles => ({
+      count: count,
+      data: profiles,
+      last: `${process.env.API_URL}/profiles?page=${Math.floor((count - 1) / pageCount) + 1}`,
+      prev: num > 0 && remaining > 0  ? `${process.env.API_URL}/profiles?page=${num}` : null,
+      next: num > -1 && remaining > pageCount ? `${process.env.API_URL}/profiles?page=${num + 2}` : null,
+    }))
+  })
+}

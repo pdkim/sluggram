@@ -11,7 +11,7 @@ const profileScheama = new Schema({
 
 const Profile = Mongoose.model('profile', profileScheama)
 
-Profile.createProfileWithPhoto = function(req){
+Profile.validateReqFile = function (req) {
   if(req.files.length > 1){
     return util.removeMulterFiles(req.files)
     .then(() => {
@@ -24,15 +24,22 @@ Profile.createProfileWithPhoto = function(req){
     if(file.fieldname !== 'avatar')
       return Promise.reject(createError(400, 'VALIDATION ERROR: file must be for avatar'))
 
-  return util.s3UploadMulterFileAndClean(file)
-  .then((s3Data) => {
-    return new Profile({
-      owner: req.user._id,
-      username: req.user.username, 
-      email: req.user.email,
-      bio: req.body.bio,
-      avatar: s3Data.Location,
-    }).save()
+  return Promise.resolve(file)
+}
+
+Profile.createProfileWithPhoto = function(req){
+  return Profile.validateReqFile(req)
+  .then((file) => {
+    return util.s3UploadMulterFileAndClean(file)
+    .then((s3Data) => {
+      return new Profile({
+        owner: req.user._id,
+        username: req.user.username, 
+        email: req.user.email,
+        bio: req.body.bio,
+        avatar: s3Data.Location,
+      }).save()
+    })
   })
 }
 
@@ -49,15 +56,18 @@ Profile.create = function(req){
   }).save()
 }
 
-Profile.getPage = function(num=1){
-  num--
-  let pageCount = 100
-  return Profile.find({})
-  .skip(num * pageCount)
-  .limit(pageCount)
-}
+Profile.getPage = util.pagerCreate(Profile)
 
 Profile.updateProfileWithPhoto = function(req) {
+  return Profile.validateReqFiles(req)
+  .then(file => {
+    return util.s3UploadMulterFileAndClean(file)
+    .then((s3Data) => {
+      let update = {avatar: s3Data.Location}
+      if(req.body.bio) update.bio = req.body.bio 
+      return Profile.findByIdAndUpdate(req.params.id, update, {new: true, runValidators: true})
+    })
+  })
 }
 
 Profile.update = function(req){
