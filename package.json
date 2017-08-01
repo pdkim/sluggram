@@ -6,7 +6,6 @@
   "author": "Duncan Marsh <dwolfm@gmail.com>",
   "license": "MIT",
   "jest": {
-    "resetModules": true,
     "setupFiles": [
       "<rootDir>/src/__test__/lib/test.env.js",
       "<rootDir>/src/__test__/lib/mock-s3.js"
