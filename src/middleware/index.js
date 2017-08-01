@@ -6,16 +6,20 @@ import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import routerAuth from './router-auth.js'
 import fourOhFour from './four-oh-four.js'
+import routerPhoto from './router-photo.js'
 import errorHandler from './error-handler.js'
 import routerProfile from './router-profile.js'
+import bindResponseMethods from './bind-response-methods.js'
 
 // INTERFACE
 export default [
   // GLOBAL MIDDLEWARE
   cors(),
   cookieParser(),
+  bindResponseMethods,
   // ROUTERS 
   routerAuth,
+  routerPhoto,
   routerProfile,
   // ERROR HANDLERS
   fourOhFour, 

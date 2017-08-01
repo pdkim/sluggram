@@ -7,7 +7,7 @@ const photoSchema = new Schema({
   url: {type: String, required: true},
   description: {type: String, required: true},
   owner: {type: Schema.Types.ObjectId, required: true},
-  profile: {type: Schema.Types.ObjectId: required: true, ref: 'profile'},
+  profile: {type: Schema.Types.ObjectId, required: true, ref: 'profile'},
   comments: [{type: Schema.Types.ObjectId}],
 })
 

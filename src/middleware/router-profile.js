@@ -7,22 +7,22 @@ import {bearerAuth} from './parser-auth.js'
 export default new Router()
 .post('/profiles', bearerAuth, parserBody, (req, res, next) => {
    Profile.create(req)
-  .then((profile) => res.send(profile))
+  .then(res.json)
   .catch(next)
 })
 .get('/profiles', (req, res, next) => {
   Profile.fetch(req)
-  .then(profiles => res.json(profiles))
+  .then(res.json)
   .catch(next)
 })
 .get('/profiles/:id', (req, res, next) => {
   Profile.fetchOne(req)
-  .then(profile => res.json(profile))
+  .then(res.json)
   .catch(next)
 })
 .put('/profiles/:id', bearerAuth, parserBody, (req, res, next) => {
   Profile.update(req)
-  .then(profile => res.json(profile))
+  .then(res.json)
   .catch(next)
 })
 .delete('/profiles/:id', bearerAuth, (req, res, next) => {
