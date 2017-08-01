@@ -107,7 +107,7 @@ The response body will be a **bearer token**.
 
 ## Profiles
 #### POST `/profiles`
-A HTTP POST request to /profiles will create a new profile. A Profile cannot be created until the User has created a profile.
+A HTTP POST request to /profiles will create a new profile. 
 
 ###### request 
 * Expected Headers
@@ -127,11 +127,9 @@ a HTTP GET request to /profiles will return an array of profiles
 ###### request 
 * Optional Query Paramiters
   * SEE PAGINATION
-  * SEE FUZZY SEARCH
-    * username is the only searchble property
 
 ###### response
-the response will be a JSON array of profiles
+See pageination
 
 ---
 
@@ -159,15 +157,61 @@ the response will return a JSON profile
 
 #### DELETE `/profiles/:id`
 a HTTP DELETE request to /profiles/:id will delete a profile
+###### request
+* Expected Headers
+  * Bearer authorization
+
 ###### response
 the response will have no body and a status of **204**
 
 ## Photos 
 #### POST `/photos`
+A HTTP POST request to /photos will create a new photo. A photo cannot be created until the User has created a profile.
+
+###### request 
+* Expected Headers
+  * Bearer authorization
+  * Content-Type: multipart/form-data
+* Expected Body 
+  * a `photo` filed with the file asset
+  * a `description` field
+
+###### response 
+the response will be a JSON photo
+
 #### GET `/photos`
+a HTTP GET request to /photos will return an array of photos
+###### request 
+* Optional Query Paramiters
+  * SEE PAGINATION
+
+###### response
+See pageination
+
 #### GET `/photos/:id`
+a HTTP GET request to /photos/:id  will return a photo
+###### response
+the response will return a JSON profile 
+
 #### PUT `/photos/:id`
+a HTTP PUT request to /photos/:id will update a profile
+
+###### request 
+* Expected Headers
+  * Bearer authorization
+  * Content-Type: multipart/form-data or Content-Type: application/json
+* Optional Body Fields
+  * an optional `photo` filed with a replacement photo
+  * a `description` 
+
 #### DELETE `/photos/:id`
+a HTTP DELETE request to /photos/:id will delete a profile
+###### request
+* Expected Headers
+  * Bearer authorization
+
+###### response
+the response will have no body and a status of **204**
 
 ## Comments
 #### POST `/comments`
