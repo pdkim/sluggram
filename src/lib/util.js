@@ -58,6 +58,7 @@ export const pagerCreate = (model) => (req) => {
   let num = Number(req.query.page) || 1
   num--
   let pageCount = 100
+  let routeName = model.modelName + 's' 
   return model.count()
   .then(count => {
     let remaining = count - num * pageCount  
@@ -67,9 +68,9 @@ export const pagerCreate = (model) => (req) => {
     .then(profiles => ({
       count: count,
       data: profiles,
-      last: `${process.env.API_URL}/profiles?page=${Math.floor((count - 1) / pageCount) + 1}`,
-      prev: num > 0 && remaining > 0  ? `${process.env.API_URL}/profiles?page=${num}` : null,
-      next: num > -1 && remaining > pageCount ? `${process.env.API_URL}/profiles?page=${num + 2}` : null,
+      last: `${process.env.API_URL}/${routeName}?page=${Math.floor((count - 1) / pageCount) + 1}`,
+      prev: num > 0 && remaining > 0  ? `${process.env.API_URL}/${routeName}?page=${num}` : null,
+      next: num > -1 && remaining > pageCount ? `${process.env.API_URL}/${routeName}?page=${num + 2}` : null,
     }))
   })
 }

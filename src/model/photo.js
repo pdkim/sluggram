@@ -30,13 +30,13 @@ Photo.validateRequest = function(req){
     .then(() => {throw err})
   }
 
-  return Profile.resolve(file)
+  return Promise.resolve(file)
 }
 
 Photo.create = function(req){
   return Photo.validateRequest(req)
   .then(file => {
-    s3UploadMulterFileAndClean(file)
+    return util.s3UploadMulterFileAndClean(file)
     .then(s3Data => {
       return new Photo({
         owner: req.user._id,
@@ -46,9 +46,13 @@ Photo.create = function(req){
       }).save()
     })
   })
+  .then(photo => {
+    return Photo.findById(photo._id)
+    .populate('profile')
+  })
 }
 
-Photo.getPage = util.pagerCreate(Photo)
+Photo.fetch = util.pagerCreate(Photo)
 
 Photo.update = function(req){
   return Promise.reject(createError(666, 'wat'))
@@ -58,4 +62,5 @@ Photo.delete = function(req){
   return Promise.reject(createError(666, 'wat'))
 }
 
+export default Photo
 

@@ -1,14 +1,107 @@
 import * as _ from 'ramda'
+import request from 'superagent'
 import cleanDB from './lib/clean-db.js'
 import * as server from '../lib/server.js'
-import {mockUser} from './lib/mock-user.js'
 import {mockProfile} from './lib/mock-profile.js'
+import {mockPhoto, mockManyPhotos} from './lib/mock-photo.js'
+
+const API_URL = process.env.API_URL
 
 describe('router-photo.test.js', () => {
-  before(server.start)
-  after(server.stop)
+  beforeAll(server.start)
+  afterAll(server.stop)
   afterEach(cleanDB)
-  test('yooll', () => {
-    expect(true).toEqual(true)
+
+  describe('POST /api/photos', () => {
+    test('should create a photo', () => {
+      return mockProfile()
+      .then(({userData, profile}) => {
+        return request.post(`${API_URL}/photos`)
+        .set('Authorization', `Bearer ${userData.token}`)
+        .attach('photo', `${__dirname}/asset/test-asset.png`)
+        .field('description', 'example data')
+        .then(res => {
+          expect(res.status).toEqual(200)
+          profile = JSON.parse(JSON.stringify(profile))
+          expect(res.body.owner).toEqual(userData.user._id.toString())
+          expect(res.body.profile).toEqual(profile)
+          expect(res.body.url).toBeTruthy()
+          expect(res.body.description).toEqual('example data')
+          expect(res.body.comments).toEqual([])
+        })
+      })
+    })
+
+    test('should respond with 400', () => {
+      return mockProfile()
+      .then(({userData, profile}) => {
+        return request.post(`${API_URL}/photos`)
+        .set('Authorization', `Bearer ${userData.token}`)
+        .field('description', 'example data')
+        .then(res => {throw res})
+        .catch(res => {
+          expect(res.status).toEqual(400)
+        })
+      })
+
+    })
+
+    test('should respond with 400', () => {
+      return mockProfile()
+      .then(({userData, profile}) => {
+        return request.post(`${API_URL}/photos`)
+        .set('Authorization', `Bearer ${userData.token}`)
+        .attach('photo', `${__dirname}/asset/test-asset.png`)
+        .then(res => {throw res})
+        .catch(res => {
+          expect(res.status).toEqual(400)
+        })
+      })
+    })
+  })
+
+  describe('GET /api/photos', () => {
+    let fetchPage = (page) => {
+      return request(`${API_URL}/photos?page=${page}`)
+      .catch(err => err)
+    }
+
+    let compareBodyWithMock = (body , mock) => {
+      _.forEach((photo) => {
+        let mockPhoto = JSON.parse(JSON.stringify(mock[photo._id]))
+        expect(photo).toEqual(mockPhoto.photo)
+      })(body)
+    }
+
+    test('should respond with 100 photos', () => {
+      return mockManyPhotos()
+      .then(photosData => {
+        return fetchPage(1)
+        .then(res => {
+          expect(res.status).toEqual(200)
+          expect(res.body.count).toEqual(100)
+          expect(res.body.prev).toEqual(null)
+          expect(res.body.next).toEqual(null)
+          expect(res.body.last).toEqual(`${API_URL}/photos?page=1`)
+          compareBodyWithMock(res.body.data, photosData)
+        })
+      })
+    })
+
+    test('should respond with 50 photos', () => {
+      return mockManyPhotos(150)
+      .then(photosData => {
+        return fetchPage(2)
+        .then(res => {
+          expect(res.status).toEqual(200)
+          expect(res.body.count).toEqual(150)
+          expect(res.body.prev).toEqual(`${API_URL}/photos?page=1`)
+          expect(res.body.next).toEqual(null)
+          expect(res.body.last).toEqual(`${API_URL}/photos?page=2`)
+          expect(res.body.data.length).toEqual(50)
+          compareBodyWithMock(res.body.data, photosData)
+        })
+      })
+    })
   })
 })

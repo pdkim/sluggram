@@ -6,6 +6,11 @@ import Photo from '../model/photo.js'
 export default new Router()
 .post('/photos', bearerAuth, parserBody, (req, res, next) => {
   Photo.create(req)
-  .then(photo => res.json(photo))
+  .then(res.json)
+  .catch(next)
+})
+.get('/photos', (req, res, next) => {
+  Photo.fetch(req)
+  .then(res.json)
   .catch(next)
 })
