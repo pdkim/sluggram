@@ -2,6 +2,7 @@ import request from 'superagent'
 import cleanDB from './lib/clean-db.js'
 import * as server from '../lib/server.js'
 import {mockUser} from './lib/mock-user.js'
+import * as _ from 'ramda'
 import {each, partialRight} from '../lib/util.js'
 
 const API_URL = process.env.API_URL
@@ -66,7 +67,7 @@ describe('routerAuth', () => {
         request.get(`${API_URL}/login`)
           .set('Authorizaton', 'not valid').catch(res => res),
       ])
-      .then(partialRight(each, res => {
+      .then(_.forEach( res => {
         expect(res.status).toEqual(400)
       }))
     })
@@ -77,7 +78,7 @@ describe('routerAuth', () => {
         loginRequest({...user, password: 'bad-password'}).catch(res => res),
         loginRequest({...user, user: {username: 'bad-username'}}).catch(res => res),
       ]))
-      .then(partialRight(each, res => {
+      .then(_.forEach(res => {
         expect(res.status).toEqual(401)
       }))
     })

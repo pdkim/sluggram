@@ -1,3 +1,4 @@
+import * as _ from 'ramda'
 import request from 'superagent'
 import cleanDB from './lib/clean-db.js'
 import * as server from '../lib/server.js'
@@ -53,9 +54,24 @@ describe('router-profile', () => {
   })
 
   describe('GET /profiles', () => {
+    let getProfileIdMap = _.reduce((result, next) => 
+      ({...result, [next.profile._id]: JSON.parse(JSON.stringify(next))}) , {})
+
+    let compareMockWithResponse = (data) => {
+      let dataById = getProfileIdMap(data)
+      return _.forEach(profile => {
+        let mockedData = dataById[profile._id]
+        expect(profile.owner).toEqual(mockedData.profile.owner)
+        expect(profile.username).toEqual(mockedData.profile.username)
+        expect(profile.email).toEqual(mockedData.profile.email)
+        expect(profile.bio).toEqual(mockedData.profile.bio)
+        expect(profile.avatar).toEqual(mockedData.profile.avatar)
+      })
+    }
+
     test('should return 100 profiles', () => {
        return mockManyProfiles(175)
-      .then(({userData, profiles}) => {
+      .then((profileData) => {
         return request.get(`${API_URL}/profiles`)
         .then(res => {
           expect(res.status).toEqual(200)
@@ -64,20 +80,14 @@ describe('router-profile', () => {
           expect(res.body.prev).toEqual(null)
           expect(res.body.next).toEqual(`${API_URL}/profiles?page=2`)
           expect(res.body.last).toEqual(`${API_URL}/profiles?page=2`)
-          res.body.data.forEach(profile => {
-            expect(profile.owner).toEqual(userData.user.id.toString())
-            expect(profile.email).toEqual(userData.user.email)
-            expect(profile.username).toEqual(userData.user.username)
-            expect(profile.bio).toBeTruthy()
-            expect(profile.avatar).toBeTruthy()
-          })
+          compareMockWithResponse(profileData)(res.body.data)
         })
       })
     })
 
     test('?page=2 should return 50 profiles', () => {
      return mockManyProfiles(150)
-      .then(({userData, profiles}) => {
+      .then((profileData) => {
         return request.get(`${API_URL}/profiles?page=2`)
         .then(res => {
           expect(res.status).toEqual(200)
@@ -86,20 +96,14 @@ describe('router-profile', () => {
           expect(res.body.next).toEqual(null)
           expect(res.body.prev).toEqual(`${API_URL}/profiles?page=1`)
           expect(res.body.last).toEqual(`${API_URL}/profiles?page=2`)
-          res.body.data.forEach(profile => {
-            expect(profile.owner).toEqual(userData.user.id.toString())
-            expect(profile.email).toEqual(userData.user.email)
-            expect(profile.username).toEqual(userData.user.username)
-            expect(profile.bio).toBeTruthy()
-            expect(profile.avatar).toBeTruthy()
-          })
+          compareMockWithResponse(profileData)(res.body.data)
         })
       })
     })
 
     test('?page=-1 should return 10 profiles', () => {
      return mockManyProfiles(10)
-      .then(({userData, profiles}) => {
+      .then((profileData) => {
         return request.get(`${API_URL}/profiles?page=-1`)
         .then(res => {
           expect(res.status).toEqual(200)
@@ -107,20 +111,14 @@ describe('router-profile', () => {
           expect(res.body.prev).toEqual(null)
           expect(res.body.next).toEqual(null)
           expect(res.body.last).toEqual(`${API_URL}/profiles?page=1`)
-          res.body.data.forEach(profile => {
-            expect(profile.owner).toEqual(userData.user.id.toString())
-            expect(profile.email).toEqual(userData.user.email)
-            expect(profile.username).toEqual(userData.user.username)
-            expect(profile.bio).toBeTruthy()
-            expect(profile.avatar).toBeTruthy()
-          })
+          compareMockWithResponse(profileData)(res.body.data)
         })
       })
     })
 
     test('?page=2 should return 100 profiles', () => {
      return mockManyProfiles(300)
-      .then(({userData, profiles}) => {
+      .then((profileData) => {
         return request.get(`${API_URL}/profiles?page=2`)
         .then(res => {
           expect(res.status).toEqual(200)
@@ -129,13 +127,7 @@ describe('router-profile', () => {
           expect(res.body.next).toEqual(`${API_URL}/profiles?page=3`)
           expect(res.body.last).toEqual(`${API_URL}/profiles?page=3`)
           expect(res.body.data.length).toEqual(100)
-          res.body.data.forEach(profile => {
-            expect(profile.owner).toEqual(userData.user.id.toString())
-            expect(profile.email).toEqual(userData.user.email)
-            expect(profile.username).toEqual(userData.user.username)
-            expect(profile.bio).toBeTruthy()
-            expect(profile.avatar).toBeTruthy()
-          })
+          compareMockWithResponse(profileData)(res.body.data)
         })
       })
     })

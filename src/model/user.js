@@ -14,6 +14,7 @@ const userSchema =  new Schema({
   username: {type: String, required: true, unique: true},
   passwordHash: {type: String, required: true},
   randomHash: {type: String,  unique: true, default: ''},
+  profile: {type: Schema.Types.ObjectId},
 })
 
 // INSTANCE METHODS

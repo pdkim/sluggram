@@ -9,6 +9,7 @@ export const mockUser = () => {
     username: faker.internet.userName(),
     email: faker.internet.email(),
     password: result.password,
+    randomHash: faker.random.uuid(),
   })
   .then(user => {
     result.user = user
