@@ -14,7 +14,11 @@ import bindResponseMethods from './bind-response-methods.js'
 // INTERFACE
 export default [
   // GLOBAL MIDDLEWARE
-  cors(),
+  cors({
+    origin: 'http://localhost:8080',
+    credentials: true,
+  }),
+  morgan('dev'),
   cookieParser(),
   bindResponseMethods,
   // ROUTERS 
@@ -25,3 +29,4 @@ export default [
   fourOhFour, 
   errorHandler,
 ]
+

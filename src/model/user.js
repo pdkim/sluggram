@@ -29,9 +29,14 @@ userSchema.methods.passwordCompare = function(password){
 
 userSchema.methods.tokenCreate  = function(){
   this.randomHash = randomBytes(32).toString('base64')
+  console.log('yeeee')
   return this.save()
   .then(user => {
-    return promisify(jwt.sign)({randomHash: this.randomHash}, process.env.SECRET)
+    return jwt.sign({randomHash: this.randomHash}, process.env.SECRET)
+  })
+  .then(token => {
+    console.log('toasdf', token)
+    return token
   })
 }
 
@@ -40,6 +45,7 @@ const User = Mongoose.model('user', userSchema)
 
 // STATIC METHODS
 User.create = function (user) {
+  console.log('user', user)
   if(!user.password || !user.email || !user.username)
     return Promise.reject(
       createError(400, 'VALIDATION ERROR: missing username email or password '))
@@ -50,6 +56,7 @@ User.create = function (user) {
   return bcrypt.hash(password, 1)
   .then(passwordHash => {
     let data = Object.assign({}, user, {passwordHash}) 
+    console.log('data', data )
     return new User(data).save()
   })
 }
