@@ -108,4 +108,38 @@ describe('router-photo.test.js', () => {
       })
     })
   })
+
+  describe.only('PUT /api/photos/:id', () => {
+    test('should respond with updated photo', () => {
+      return mockPhoto()
+      .then(mock => {
+        return request.put(`${API_URL}/photos/${mock.photo._id}`)
+        .set('Authorization', `Bearer ${mock.userData.token}`)
+        .attach('photo', `${__dirname}/asset/test-asset.png`)
+        .field('description', 'cool beans')
+        .then(res => {
+          expect(res.status).toEqual(200)
+          console.log('res.body', res.body)
+          expect(res.body._id).toEqual(mock.photo._id.toString())
+          expect(res.body.description).toEqual('cool beans')
+          expect(res.body.url).not.toEqual(mock.photo.url)
+        })
+      })
+    })
+
+    test('should respond with updated photo', () => {
+      return mockPhoto()
+      .then(mock => {
+        return request.put(`${API_URL}/photos/${mock.photo._id}`)
+        .set('Authorization', `Bearer ${mock.userData.token}`)
+        .attach('photo', `${__dirname}/asset/test-asset.png`)
+        .attach('photo', `${__dirname}/asset/test-asset.png`)
+        .field('description', 'cool beans')
+        .catch(res => res)
+        .then(res => {
+          expect(res.status).toEqual(400)
+        })
+      })
+    })
+  })
 })

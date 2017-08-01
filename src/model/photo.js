@@ -17,7 +17,7 @@ Photo.validateRequest = function(req){
   if(req.method === 'POST' && !req.files)
     return Promise.reject(createError(400, 'VALIDATION ERROR: must have a file'))
 
-  if(req.files.length < 1) {
+  if(req.files.length > 1) {
     let err = createError(400, 'VALIDATION ERROR: must have one file')
     return util.removeMulterFiles(req.files)
     .then(() => {throw err})
@@ -67,15 +67,28 @@ Photo.updatePhotoWithFile = function(req){
 }
 
 Photo.update = function(req){
+  console.log('req.files', req.files)
   if(req.files)
     return Photo.updatePhotoWithFile(req)
+    .then(photo => {
+      return Photo.findById(photo._id)
+      .populate('comments profile')
+    })
   let options = {new: true, runValidators: true}
   let update = {description: req.body.description}
   return Photo.findByIdAndUpdate(req.params.id, update, options)
+  .then(photo => {
+    return Photo.findById(photo._id)
+    .populate('comments profile')
+  })
 }
 
 Photo.delete = function(req){
-  return Promise.reject(createError(666, 'wat'))
+  return Photo.findOneAndRemove({_id: req.params.id, owner: req.user._id})
+  .then(profile => {
+    if(!profile)
+      throw createError(404, 'NOT FOUND ERROR: profile not found')
+  })
 }
 
 export default Photo
