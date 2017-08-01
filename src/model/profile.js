@@ -22,7 +22,10 @@ Profile.validateReqFile = function (req) {
   let [file] = req.files
   if(file)
     if(file.fieldname !== 'avatar')
-      return Promise.reject(createError(400, 'VALIDATION ERROR: file must be for avatar'))
+    return util.removeMulterFiles(req.files)
+    .then(() => {
+      throw createError(400, 'VALIDATION ERROR: file must be for avatar')
+    })
 
   return Promise.resolve(file)
 }
@@ -59,7 +62,7 @@ Profile.create = function(req){
 Profile.getPage = util.pagerCreate(Profile)
 
 Profile.updateProfileWithPhoto = function(req) {
-  return Profile.validateReqFiles(req)
+  return Profile.validateReqFile(req)
   .then(file => {
     return util.s3UploadMulterFileAndClean(file)
     .then((s3Data) => {
@@ -72,7 +75,7 @@ Profile.updateProfileWithPhoto = function(req) {
 
 Profile.update = function(req){
   if(req.files)
-    return updateProfileWithPhoto(req)
+    return Profile.updateProfileWithPhoto(req)
   let options = {new: true, runValidators: true}
   return Profile.findByIdAndUpdate(req.params.id, {bio: req.body.bio}, options)
 }

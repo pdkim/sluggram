@@ -4,7 +4,7 @@ import Profile from '../../model/profile.js'
 
 export default () => 
   Promise.all([
-  fs.remove(`${__dirname}/../../../temp`),
+  fs.remove(`${__dirname}/../../../temp/*`),
     User.remove({}),
     Profile.remove({}),
   ])

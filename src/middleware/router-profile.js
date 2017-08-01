@@ -26,6 +26,15 @@ export default new Router()
 })
 .put('/profiles/:id', bearerAuth, parserBody, (req, res, next) => {
   Profile.update(req)
-  .then(profile => res.json)
+  .then(profile => res.json(profile))
+  .catch(next)
+})
+.delete('/profiles/:id', bearerAuth, (req, res, next) => {
+  Profile.findByIdAndRemove(req.params.id)
+  .then(profile => {
+    if(!profile)
+      throw createError(404, 'NOT FOUND ERROR: profile not found')
+    res.sendStatus(204)
+  })
   .catch(next)
 })

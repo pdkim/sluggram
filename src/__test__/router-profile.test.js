@@ -184,17 +184,66 @@ describe('router-profile', () => {
         return request.put(`${API_URL}/profiles/${profile._id}`)
         .set('Authorization', `Bearer ${userData.token}`)   
         .send({bio})
+        .then(res => ({res, userData, profile}))
+      })
+    }
+
+    let putMultipartProfile = (bio) => {
+      return mockProfile()
+      .then(({userData, profile}) => {
+        return request.put(`${API_URL}/profiles/${profile._id}`)
+        .set('Authorization', `Bearer ${userData.token}`)   
+        .field('bio', bio)
+        .attach('avatar', `${__dirname}/asset/test-asset.png`)
+        .then(res => ({res, userData, profile}))
       })
     }
     
     test('should update the bio', () => {
-      expect(true).toEqual(true)
-      //return putJSONProfile('cool beans')
-      //.then((res) => {
-        //expect(res.status).toEqual(200)
-        //profile = JSON.parse(JSON.stringify(profile))
-        //expect(res.body).toEqual({...profile, bio: 'cool beans'})
-      //})
+      return putJSONProfile('cool beans')
+      .then(({res, profile}) => {
+        expect(res.status).toEqual(200)
+        profile = JSON.parse(JSON.stringify(profile))
+        expect(res.body).toEqual({...profile, bio: 'cool beans'})
+      })
+    })
+
+    test('should update the bio and avatar', () => {
+      return putMultipartProfile('cool beans')
+      .then(({res, profile}) => {
+        expect(res.status).toEqual(200)
+        profile = JSON.parse(JSON.stringify(profile))
+        expect(res.body._id).toEqual(profile._id)
+        expect(res.body.email).toEqual(profile.email)
+        expect(res.body.username).toEqual(profile.username)
+        expect(res.body.bio).toEqual('cool beans')
+        expect(res.body.avatar).not.toEqual(profile.avatar)
+      })
+    })
+  })
+
+  describe('DELETE /profiles/:id', () => {
+    test('should return a 204 status', () => {
+      return mockProfile()
+      .then(({userData, profile}) => {
+        return request.delete(`${API_URL}/profiles/${profile._id}`)
+        .set('Authorization', `Bearer ${userData.token}`)   
+        .then(res => {
+          expect(res.status).toEqual(204)
+        })
+      })
+    })
+
+    test('should return a 404 status', () => {
+      return mockProfile()
+      .then(({userData, profile}) => {
+        return request.delete(`${API_URL}/profiles/${userData.user._id}`)
+        .set('Authorization', `Bearer ${userData.token}`)   
+        .then(res => {throw res})
+        .catch(res => {
+          expect(res.status).toEqual(404)
+        })
+      })
     })
   })
 })
