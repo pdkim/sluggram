@@ -145,10 +145,11 @@ a HTTP PUT request to /profiles/:id will update a profile
 ###### request 
 * Expected Headers
   * Bearer authorization
-  * Content-Type: multipart/form-data
+  * Content-Type: multipart/form-data or application/json
 * Optional Body Fields
-  * a `bio` field containing string with the users bio
-  * a `image` filed with the users avatar image
+  * an optional `image` filed with the users avatar image
+    * photo uploads are only posible for Content-Type: multipart/form-data
+  * an optional `bio` field containing string with the users bio
 
 ###### response
 the response will return a JSON profile 
@@ -199,10 +200,11 @@ a HTTP PUT request to /photos/:id will update a profile
 ###### request 
 * Expected Headers
   * Bearer authorization
-  * Content-Type: multipart/form-data or Content-Type: application/json
+  * Content-Type: multipart/form-data or application/json
 * Optional Body Fields
   * an optional `photo` filed with a replacement photo
-  * a `description` 
+    * photo uploads are only posible for Content-Type: multipart/form-data
+  * an optional `description` 
 
 #### DELETE `/photos/:id`
 a HTTP DELETE request to /photos/:id will delete a profile
