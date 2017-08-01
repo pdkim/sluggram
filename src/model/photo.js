@@ -57,6 +57,17 @@ Photo.create = function(req){
 
 Photo.fetch = util.pagerCreate(Photo, 'comments profile')
 
+Photo.fetchOne = function(req){
+  console.log('req.params.id', req.params.id)
+  return Photo.findById(req.params.id)
+  .populate('profile comments')
+  .then(photo => {
+    if(!photo)
+      throw createError(404, 'NOT FOUND ERROR: photo not found') 
+    return photo
+  })
+}
+
 Photo.updatePhotoWithFile = function(req){
   return Photo.validateRequest(req)
   .then(file => {

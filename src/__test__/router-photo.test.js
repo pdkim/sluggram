@@ -109,6 +109,29 @@ describe('router-photo.test.js', () => {
     })
   })
 
+  describe('GET /api/photos/:id', () => {
+    test('should fetch a photo', () => {
+      return mockPhoto()
+      .then(mock => {
+        return request.get(`${API_URL}/photos/${mock.photo._id}`)
+        .then(res => {
+          expect(res.status).toEqual(200)
+        })
+      })
+    })
+
+    test('should 404', () => {
+      return mockPhoto()
+      .then(mock => {
+        return request.get(`${API_URL}/photos/${mock.photo.owner}`)
+        .catch(res => res)
+        .then(res => {
+          expect(res.status).toEqual(404)
+        })
+      })
+    })
+  })
+
   describe('PUT /api/photos/:id', () => {
     test('should respond with updated photo', () => {
       return mockPhoto()
@@ -143,7 +166,7 @@ describe('router-photo.test.js', () => {
     })
   })
 
-  describe.only('DELETE /api/photos/:id', () => {
+  describe('DELETE /api/photos/:id', () => {
     test('should delete a photo', () => {
       return mockPhoto()
       .then(mock => {

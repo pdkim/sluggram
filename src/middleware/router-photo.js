@@ -14,6 +14,11 @@ export default new Router()
   .then(res.json)
   .catch(next)
 })
+.get('/photos/:id', (req, res, next) => {
+  Photo.fetchOne(req)
+  .then(res.json)
+  .catch(next)
+})
 .put('/photos/:id', bearerAuth, parserBody, (req, res, next) => {
   Photo.update(req)
   .then(res.json)
