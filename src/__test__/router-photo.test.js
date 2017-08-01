@@ -109,7 +109,7 @@ describe('router-photo.test.js', () => {
     })
   })
 
-  describe.only('PUT /api/photos/:id', () => {
+  describe('PUT /api/photos/:id', () => {
     test('should respond with updated photo', () => {
       return mockPhoto()
       .then(mock => {
@@ -142,4 +142,6 @@ describe('router-photo.test.js', () => {
       })
     })
   })
+  
+
 })

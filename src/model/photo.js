@@ -17,6 +17,9 @@ Photo.validateRequest = function(req){
   if(req.method === 'POST' && !req.files)
     return Promise.reject(createError(400, 'VALIDATION ERROR: must have a file'))
 
+  if(req.method === 'POST' && req.files.length < 1)
+    return Promise.reject(createError(400, 'VALIDATION ERROR: must have a file'))
+
   if(req.files.length > 1) {
     let err = createError(400, 'VALIDATION ERROR: must have one file')
     return util.removeMulterFiles(req.files)
