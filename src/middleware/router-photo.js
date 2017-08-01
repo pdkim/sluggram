@@ -14,3 +14,5 @@ export default new Router()
   .then(res.json)
   .catch(next)
 })
+.put('/photos/:id', bearerAuth, parserBody, (req, res, next) => {
+})

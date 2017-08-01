@@ -52,10 +52,26 @@ Photo.create = function(req){
   })
 }
 
-Photo.fetch = util.pagerCreate(Photo)
+Photo.fetch = util.pagerCreate(Photo, 'comments profile')
+
+Photo.updatePhotoWithFile = function(req){
+  return Photo.validateRequest(req)
+  .then(file => {
+    return util.s3UploadMulterFileAndClean(file)
+    .then(s3Data => {
+      let update = {url: s3Data.Location}
+      if(req.body.description) update.description = req.body.description 
+      return Photo.findByIdAndUpdate(req.params.id, update, {new: true, runValidators: true})
+    })
+  })
+}
 
 Photo.update = function(req){
-  return Promise.reject(createError(666, 'wat'))
+  if(req.files)
+    return Photo.updatePhotoWithFile(req)
+  let options = {new: true, runValidators: true}
+  let update = {description: req.body.description}
+  return Photo.findByIdAndUpdate(req.params.id, update, options)
 }
 
 Photo.delete = function(req){

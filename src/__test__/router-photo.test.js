@@ -69,7 +69,11 @@ describe('router-photo.test.js', () => {
     let compareBodyWithMock = (body , mock) => {
       _.forEach((photo) => {
         let mockPhoto = JSON.parse(JSON.stringify(mock[photo._id]))
-        expect(photo).toEqual(mockPhoto.photo)
+        expect(photo._id).toEqual(mockPhoto.photo._id)
+        expect(photo.owner).toEqual(mockPhoto.photo.owner)
+        expect(photo.description).toEqual(mockPhoto.photo.description)
+        expect(photo.url).toEqual(mockPhoto.photo.url)
+        expect(photo.profile).toEqual(mockPhoto.profile)
       })(body)
     }
 

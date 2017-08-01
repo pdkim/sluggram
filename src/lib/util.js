@@ -54,7 +54,7 @@ export const s3UploadMulterFileAndClean = (data) => {
   .then(s3Data => fs.remove(data.path).then(() => s3Data))
 }
 
-export const pagerCreate = (model) => (req) => {
+export const pagerCreate = (model, populate='') => (req) => {
   let num = Number(req.query.page) || 1
   num--
   let pageCount = 100
@@ -63,6 +63,7 @@ export const pagerCreate = (model) => (req) => {
   .then(count => {
     let remaining = count - num * pageCount  
     return model.find({})
+    .populate(populate)
     .skip(num > 0 ? num * pageCount : 0)
     .limit(pageCount)
     .then(profiles => ({
