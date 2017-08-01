@@ -19,7 +19,7 @@ export default new Router()
   .then(res.json)
   .catch(next)
 })
-.delete('/photos/:id', bearerAuth, parserBody, (req, res, next) => {
+.delete('/photos/:id', bearerAuth, (req, res, next) => {
   Photo.delete(req)
   .then(() => res.sendStatus(204))
   .catch(next)

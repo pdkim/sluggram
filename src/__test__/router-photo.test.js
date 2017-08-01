@@ -142,6 +142,30 @@ describe('router-photo.test.js', () => {
       })
     })
   })
-  
+
+  describe.only('DELETE /api/photos/:id', () => {
+    test('should delete a photo', () => {
+      return mockPhoto()
+      .then(mock => {
+        return request.delete(`${API_URL}/photos/${mock.photo._id}`)
+        .set('Authorization', `Bearer ${mock.userData.token}`)
+        .then(res => {
+          expect(res.status).toEqual(204)
+        })
+      })
+    })
+
+    test('should 404', () => {
+      return mockPhoto()
+      .then(mock => {
+        return request.delete(`${API_URL}/photos/${mock.photo.owner}`)
+        .set('Authorization', `Bearer ${mock.userData.token}`)
+        .catch(res => res)
+        .then(res => {
+          expect(res.status).toEqual(404)
+        })
+      })
+    })
+  })
 
 })
