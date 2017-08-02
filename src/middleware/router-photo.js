@@ -11,7 +11,7 @@ export default new Router()
 })
 .get('/photos', (req, res, next) => {
   Photo.fetch(req)
-  .then(res.json)
+  .then(res.page)
   .catch(next)
 })
 .get('/photos/:id', (req, res, next) => {

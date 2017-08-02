@@ -107,7 +107,7 @@ The response body will be a **bearer token**.
 
 ## Profiles
 #### POST `/profiles`
-A HTTP POST request to /profiles will create a new profile. A Profile cannot be created until the User has created a profile.
+A HTTP POST request to /profiles will create a new profile. 
 
 ###### request 
 * Expected Headers
@@ -127,11 +127,9 @@ a HTTP GET request to /profiles will return an array of profiles
 ###### request 
 * Optional Query Paramiters
   * SEE PAGINATION
-  * SEE FUZZY SEARCH
-    * username is the only searchble property
 
 ###### response
-the response will be a JSON array of profiles
+See pageination
 
 ---
 
@@ -142,15 +140,27 @@ the response will return a JSON profile
 
 ---
 
+#### GET `/profiles/me`
+a HTTP GET request to /profiles/:id  will return a profile
+###### request 
+* Expected Headers
+  * Bearer authorization
+###### response
+the response will return a users JSON profile 
+
+
+---
+
 #### PUT `/profiles/:id`
 a HTTP PUT request to /profiles/:id will update a profile
 ###### request 
 * Expected Headers
   * Bearer authorization
-  * Content-Type: multipart/form-data
+  * Content-Type: multipart/form-data or application/json
 * Optional Body Fields
-  * a `bio` field containing string with the users bio
-  * a `image` filed with the users avatar image
+  * an optional `image` filed with the users avatar image
+    * photo uploads are only posible for Content-Type: multipart/form-data
+  * an optional `bio` field containing string with the users bio
 
 ###### response
 the response will return a JSON profile 
@@ -159,15 +169,62 @@ the response will return a JSON profile
 
 #### DELETE `/profiles/:id`
 a HTTP DELETE request to /profiles/:id will delete a profile
+###### request
+* Expected Headers
+  * Bearer authorization
+
 ###### response
 the response will have no body and a status of **204**
 
 ## Photos 
 #### POST `/photos`
+A HTTP POST request to /photos will create a new photo. A photo cannot be created until the User has created a profile.
+
+###### request 
+* Expected Headers
+  * Bearer authorization
+  * Content-Type: multipart/form-data
+* Expected Body 
+  * a `photo` filed with the file asset
+  * a `description` field
+
+###### response 
+the response will be a JSON photo
+
 #### GET `/photos`
+a HTTP GET request to /photos will return an array of photos
+###### request 
+* Optional Query Paramiters
+  * SEE PAGINATION
+
+###### response
+See pageination
+
 #### GET `/photos/:id`
+a HTTP GET request to /photos/:id  will return a photo
+###### response
+the response will return a JSON profile 
+
 #### PUT `/photos/:id`
+a HTTP PUT request to /photos/:id will update a profile
+
+###### request 
+* Expected Headers
+  * Bearer authorization
+  * Content-Type: multipart/form-data or application/json
+* Optional Body Fields
+  * an optional `photo` filed with a replacement photo
+    * photo uploads are only posible for Content-Type: multipart/form-data
+  * an optional `description` 
+
 #### DELETE `/photos/:id`
+a HTTP DELETE request to /photos/:id will delete a profile
+###### request
+* Expected Headers
+  * Bearer authorization
+
+###### response
+the response will have no body and a status of **204**
 
 ## Comments
 #### POST `/comments`

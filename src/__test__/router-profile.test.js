@@ -169,6 +169,20 @@ describe('router-profile', () => {
     })
   })
 
+  describe.only('GET /profiles/me', () => {
+    test('should return user profile', () => {
+      return mockProfile()
+      .then(mock => {
+        return request(`${API_URL}/profiles/me`)
+        .set('Authorization', `Bearer ${mock.userData.token}`)
+        .then(res => {
+          expect(res.status).toEqual(200)
+          expect(res.body.owner).toEqual(mock.userData.user._id.toString())
+        })
+      })
+    })
+  })
+
   describe('PUT /profiles/:id', () => {
     let putJSONProfile = (bio) => {
       return mockProfile()
