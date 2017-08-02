@@ -140,6 +140,17 @@ the response will return a JSON profile
 
 ---
 
+#### GET `/profiles/me`
+a HTTP GET request to /profiles/:id  will return a profile
+###### request 
+* Expected Headers
+  * Bearer authorization
+###### response
+the response will return a users JSON profile 
+
+
+---
+
 #### PUT `/profiles/:id`
 a HTTP PUT request to /profiles/:id will update a profile
 ###### request 
