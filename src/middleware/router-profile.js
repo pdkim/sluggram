@@ -12,7 +12,16 @@ export default new Router()
 })
 .get('/profiles', (req, res, next) => {
   Profile.fetch(req)
-  .then(res.json)
+  .then(res.page)
+  .catch(next)
+})
+.get('/profiles/me', bearerAuth, (req, res, next) => {
+  Profile.findOne({owner: req.user._id})
+  .then(profile => {
+    if(!profile)
+      return next(createError(404, 'NOT FOUND ERROR: profile not found'))
+    res.json(profile)
+  })
   .catch(next)
 })
 .get('/profiles/:id', (req, res, next) => {

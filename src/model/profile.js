@@ -3,7 +3,7 @@ import * as util from '../lib/util.js'
 import Mongoose, {Schema} from 'mongoose'
 
 const profileScheama = new Schema({
-  owner: {type: Schema.Types.ObjectId, required: true},
+  owner: {type: Schema.Types.ObjectId, required: true, unique: true},
   email: {type: String, required: true},
   username: {type: String, required: true},
   avatar: {type: String},
