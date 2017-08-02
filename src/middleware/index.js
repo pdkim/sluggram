@@ -3,6 +3,7 @@
 // DEPENDENCIES
 import cors from 'cors'
 import morgan from 'morgan'
+import {Router} from 'express'
 import cookieParser from 'cookie-parser'
 import routerAuth from './router-auth.js'
 import fourOhFour from './four-oh-four.js'
@@ -12,10 +13,11 @@ import routerProfile from './router-profile.js'
 import bindResponseMethods from './bind-response-methods.js'
 
 // INTERFACE
-export default [
+export default new Router()
+.use([
   // GLOBAL MIDDLEWARE
   cors({
-    origin: 'http://localhost:8080',
+    origin: process.env.CORS_ORIGINS.split(' '),
     credentials: true,
   }),
   morgan('dev'),
@@ -28,5 +30,4 @@ export default [
   // ERROR HANDLERS
   fourOhFour, 
   errorHandler,
-]
-
+])
