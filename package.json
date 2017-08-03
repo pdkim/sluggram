@@ -14,8 +14,8 @@
   "scripts": {
     "lint": "eslint .",
     "start": "node index.js",
-    "test": "jest --coverage",
-    "test-watch": "jest --watchAll",
+    "test": "jest --runInBand",
+    "test-watch": "jest --runInBand --watchAll",
     "db-on": "mkdir -p ./db && mongod --dbpath ./db",
     "db-off": "killall mongod"
   },

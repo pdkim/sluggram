@@ -142,7 +142,6 @@ describe('router-photo.test.js', () => {
         .field('description', 'cool beans')
         .then(res => {
           expect(res.status).toEqual(200)
-          console.log('res.body', res.body)
           expect(res.body._id).toEqual(mock.photo._id.toString())
           expect(res.body.description).toEqual('cool beans')
           expect(res.body.url).not.toEqual(mock.photo.url)
