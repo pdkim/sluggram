@@ -20,6 +20,14 @@ export default new Router()
   })
   .catch(next)
 })
+.get('/check/:username', (req, res, next) => {
+  User.findOne({username: username})
+  .then(user => {
+    if(!user)
+      return res.sendStatus(409)
+    return res.sendStatus(200)
+  })
+})
 .get('/login', basicAuth, (req, res, next) => {
   log('__ROUTE__ GET /login')
   req.user.tokenCreate()
