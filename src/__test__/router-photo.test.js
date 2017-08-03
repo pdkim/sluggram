@@ -1,15 +1,16 @@
 import * as _ from 'ramda'
 import request from 'superagent'
 import cleanDB from './lib/clean-db.js'
-import * as server from '../lib/server.js'
+import server from '../lib/server.js'
 import {mockProfile} from './lib/mock-profile.js'
 import {mockPhoto, mockManyPhotos} from './lib/mock-photo.js'
 
 const API_URL = process.env.API_URL
+const app = server(4002)
 
 describe('router-photo.test.js', () => {
-  beforeAll(server.start)
-  afterAll(server.stop)
+  beforeAll(app.start)
+  afterAll(app.stop)
   afterEach(cleanDB)
 
   describe('POST /api/photos', () => {
@@ -142,7 +143,6 @@ describe('router-photo.test.js', () => {
         .field('description', 'cool beans')
         .then(res => {
           expect(res.status).toEqual(200)
-          console.log('res.body', res.body)
           expect(res.body._id).toEqual(mock.photo._id.toString())
           expect(res.body.description).toEqual('cool beans')
           expect(res.body.url).not.toEqual(mock.photo.url)

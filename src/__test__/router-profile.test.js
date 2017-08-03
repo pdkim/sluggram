@@ -1,15 +1,16 @@
 import * as _ from 'ramda'
 import request from 'superagent'
 import cleanDB from './lib/clean-db.js'
-import * as server from '../lib/server.js'
+import server from '../lib/server.js'
 import {mockUser} from './lib/mock-user.js'
 import {mockProfile, mockManyProfiles} from './lib/mock-profile.js'
 
-const API_URL = process.env.API_URL
+const API_URL = 'http://localhost:4003'
+const app = server(4003)
 
 describe('router-profile', () => {
-  beforeAll(server.start)
-  afterAll(server.stop)
+  beforeAll(app.start)
+  afterAll(app.stop)
   afterEach(cleanDB)
 
   describe('POST /profiles', () => {
@@ -78,8 +79,8 @@ describe('router-profile', () => {
           expect(res.body.count).toEqual(175)
           expect(res.body.data.length).toEqual(100)
           expect(res.body.prev).toEqual(null)
-          expect(res.body.next).toEqual(`${API_URL}/profiles?page=2`)
-          expect(res.body.last).toEqual(`${API_URL}/profiles?page=2`)
+          expect(res.body.next).toEqual(`http://localhost:7777/profiles?page=2`)
+          expect(res.body.last).toEqual(`http://localhost:7777/profiles?page=2`)
           compareMockWithResponse(profileData)(res.body.data)
         })
       })
@@ -94,8 +95,8 @@ describe('router-profile', () => {
           expect(res.body.count).toEqual(150)
           expect(res.body.data.length).toEqual(50)
           expect(res.body.next).toEqual(null)
-          expect(res.body.prev).toEqual(`${API_URL}/profiles?page=1`)
-          expect(res.body.last).toEqual(`${API_URL}/profiles?page=2`)
+          expect(res.body.prev).toEqual(`http://localhost:7777/profiles?page=1`)
+          expect(res.body.last).toEqual(`http://localhost:7777/profiles?page=2`)
           compareMockWithResponse(profileData)(res.body.data)
         })
       })
@@ -110,7 +111,7 @@ describe('router-profile', () => {
           expect(res.body.count).toEqual(10)
           expect(res.body.prev).toEqual(null)
           expect(res.body.next).toEqual(null)
-          expect(res.body.last).toEqual(`${API_URL}/profiles?page=1`)
+          expect(res.body.last).toEqual(`http://localhost:7777/profiles?page=1`)
           compareMockWithResponse(profileData)(res.body.data)
         })
       })
@@ -123,9 +124,9 @@ describe('router-profile', () => {
         .then(res => {
           expect(res.status).toEqual(200)
           expect(res.body.count).toEqual(300)
-          expect(res.body.prev).toEqual(`${API_URL}/profiles?page=1`)
-          expect(res.body.next).toEqual(`${API_URL}/profiles?page=3`)
-          expect(res.body.last).toEqual(`${API_URL}/profiles?page=3`)
+          expect(res.body.prev).toEqual(`http://localhost:7777/profiles?page=1`)
+          expect(res.body.next).toEqual(`http://localhost:7777/profiles?page=3`)
+          expect(res.body.last).toEqual(`http://localhost:7777/profiles?page=3`)
           expect(res.body.data.length).toEqual(100)
           compareMockWithResponse(profileData)(res.body.data)
         })
@@ -141,7 +142,7 @@ describe('router-profile', () => {
           expect(res.body.count).toEqual(10)
           expect(res.body.prev).toEqual(null)
           expect(res.body.next).toEqual(null)
-          expect(res.body.last).toEqual(`${API_URL}/profiles?page=1`)
+          expect(res.body.last).toEqual(`http://localhost:7777/profiles?page=1`)
           expect(res.body.data.length).toEqual(0)
         })
       })

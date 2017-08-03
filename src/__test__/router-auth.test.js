@@ -1,15 +1,16 @@
 import request from 'superagent'
 import cleanDB from './lib/clean-db.js'
-import * as server from '../lib/server.js'
+import server from '../lib/server.js'
 import {mockUser} from './lib/mock-user.js'
 import * as _ from 'ramda'
 import {each, partialRight} from '../lib/util.js'
 
-const API_URL = process.env.API_URL
+const API_URL = 'http://localhost:4001'
+const app = server(4001)
 
 describe('routerAuth', () => {
-  beforeAll(server.start)
-  afterAll(server.stop)
+  beforeAll(app.start)
+  afterAll(app.stop)
   afterEach(cleanDB)
 
   describe('POST /signup', () => {

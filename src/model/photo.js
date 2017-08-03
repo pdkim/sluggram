@@ -58,7 +58,6 @@ Photo.create = function(req){
 Photo.fetch = util.pagerCreate(Photo, 'comments profile')
 
 Photo.fetchOne = function(req){
-  console.log('req.params.id', req.params.id)
   return Photo.findById(req.params.id)
   .populate('profile comments')
   .then(photo => {
@@ -81,7 +80,6 @@ Photo.updatePhotoWithFile = function(req){
 }
 
 Photo.update = function(req){
-  console.log('req.files', req.files)
   if(req.files)
     return Photo.updatePhotoWithFile(req)
     .then(photo => {

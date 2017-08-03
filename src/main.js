@@ -1,2 +1,8 @@
-import {start} from './lib/server.js'
-start({PORT: process.env.PORT, MONGO_URI: process.env.MONGO_URI})  
+import server from './lib/server.js'
+import * as db from './lib/db.js'
+const app = server(process.env.PORT)
+
+db.start()
+.then(() => {
+  return app.start()  
+})
