@@ -14,6 +14,11 @@ export default new Router()
   .then(res.page)
   .catch(next)
 })
+.get('/photos/me', bearerAuth, (req, res, next) => {
+  Photo.fetch(req, {username: req.user.usrename})
+  .then(res.page)
+  .catch(next)
+})
 .get('/photos/:id', (req, res, next) => {
   Photo.fetchOne(req)
   .then(res.json)
