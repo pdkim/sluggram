@@ -27,10 +27,12 @@ Photo.validateRequest = function(req){
   }
 
   let [file] = req.files
-  if(file.fieldname !== 'photo'){
-    let err = createError(400, 'VALIDATION ERROR: file must be on field photo')
-    return util.removeMulterFiles(req.files)
-    .then(() => {throw err})
+  if(file){
+    if(file.fieldname !== 'photo'){
+      let err = createError(400, 'VALIDATION ERROR: file must be on field photo')
+      return util.removeMulterFiles(req.files)
+      .then(() => {throw err})
+    }
   }
 
   return Promise.resolve(file)
@@ -80,7 +82,7 @@ Photo.updatePhotoWithFile = function(req){
 }
 
 Photo.update = function(req){
-  if(req.files)
+  if(req.files && req.files[0])
     return Photo.updatePhotoWithFile(req)
     .then(photo => {
       return Photo.findById(photo._id)
