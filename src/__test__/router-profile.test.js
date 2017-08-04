@@ -169,7 +169,7 @@ describe('router-profile', () => {
     })
   })
 
-  describe.only('GET /profiles/me', () => {
+  describe('GET /profiles/me', () => {
     test('should return user profile', () => {
       return mockProfile()
       .then(mock => {

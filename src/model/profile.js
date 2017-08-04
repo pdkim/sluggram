@@ -95,7 +95,7 @@ Profile.updateProfileWithPhoto = function(req) {
 }
 
 Profile.update = function(req){
-  if(req.files)
+  if(req.files && req.files[0])
     return Profile.updateProfileWithPhoto(req)
   let options = {new: true, runValidators: true}
   return Profile.findByIdAndUpdate(req.params.id, {bio: req.body.bio}, options)

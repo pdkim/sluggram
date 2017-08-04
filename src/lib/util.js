@@ -54,24 +54,23 @@ export const s3UploadMulterFileAndClean = (data) => {
   .then(s3Data => fs.remove(data.path).then(() => s3Data))
 }
 
-export const pagerCreate = (model, populate='') => (req) => {
-  let num = Number(req.query.page) || 1
-  num--
-  let pageCount = 100
-  let routeName = model.modelName + 's' 
+export const pagerCreate = (model, populate='') => (req, query={}) => {
+  let offset = (Number(req.query.page) - 1) || 0
+  let itemLimit = 100
+  let route = `${process.env.API_URL}/${model.modelName}s?page=`
   return model.count()
   .then(count => {
-    let remaining = count - num * pageCount  
-    return model.find({})
+    let remaining = count - offset * itemLimit  
+    return model.find(query)
     .populate(populate)
-    .skip(num > 0 ? num * pageCount : 0)
-    .limit(pageCount)
+    .skip(offset > 0 ? offset * itemLimit : 0)
+    .limit(itemLimit)
     .then(profiles => ({
       count: count,
       data: profiles,
-      last: `${process.env.API_URL}/${routeName}?page=${Math.floor((count - 1) / pageCount) + 1}`,
-      prev: num > 0 && remaining > 0  ? `${process.env.API_URL}/${routeName}?page=${num}` : null,
-      next: num > -1 && remaining > pageCount ? `${process.env.API_URL}/${routeName}?page=${num + 2}` : null,
+      last: `${route}${Math.floor((count - 1) / itemLimit) + 1}`,
+      prev: offset > 0 && remaining > 0  ? `${route}${offset}` : null,
+      next: offset > -1 && remaining > itemLimit ? `${route}${offset + 2}` : null,
     }))
   })
 }

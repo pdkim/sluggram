@@ -27,10 +27,12 @@ Photo.validateRequest = function(req){
   }
 
   let [file] = req.files
-  if(file.fieldname !== 'photo'){
-    let err = createError(400, 'VALIDATION ERROR: file must be on field photo')
-    return util.removeMulterFiles(req.files)
-    .then(() => {throw err})
+  if(file){
+    if(file.fieldname !== 'photo'){
+      let err = createError(400, 'VALIDATION ERROR: file must be on field photo')
+      return util.removeMulterFiles(req.files)
+      .then(() => {throw err})
+    }
   }
 
   return Promise.resolve(file)
@@ -58,7 +60,6 @@ Photo.create = function(req){
 Photo.fetch = util.pagerCreate(Photo, 'comments profile')
 
 Photo.fetchOne = function(req){
-  console.log('req.params.id', req.params.id)
   return Photo.findById(req.params.id)
   .populate('profile comments')
   .then(photo => {
@@ -81,8 +82,7 @@ Photo.updatePhotoWithFile = function(req){
 }
 
 Photo.update = function(req){
-  console.log('req.files', req.files)
-  if(req.files)
+  if(req.files && req.files[0])
     return Photo.updatePhotoWithFile(req)
     .then(photo => {
       return Photo.findById(photo._id)

@@ -2,6 +2,23 @@ SLUGGRAM
 ===
 > a social photo platform REST API
 
+## Configureation
+Create a `.env` file and configure it with the following enviroment variables 
+``` bash
+PORT=3000 
+DEBUG=true
+CORS_ORIGINS='<one or more cors orgins (space seporated)>' 
+MONGO_URI='<mongo uri>'
+SECRET='<random string>'
+AWS_ACCESS_KEY_ID='<a aws access key id>'
+AWS_SECRET_ACCESS_KEY='<a aws secret access key>'
+AWS_BUCKET='<a aws bucket>'
+```
+
+## Running Sluggam 
+* Start a mongodb `yarn db-on`
+* Start the server `yarn start`
+
 ## API Resources
 #### User Model
 The user model is used in the backend strickly for authentication and authorization. The user model will never be returned from the API, however userID's are stored on Profiles, Photos, and Comments for authorzation validation.  
