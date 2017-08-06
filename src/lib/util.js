@@ -1,4 +1,5 @@
 // DEPENDENCIES
+import _ from 'ramda'
 import AWS from 'aws-sdk'
 import {extname} from 'path'
 import fs from 'fs-extra'
@@ -52,6 +53,11 @@ export const s3UploadMulterFileAndClean = (data) => {
   // allways remove file and either pass on failure or success
   .catch(err => fs.remove(data.path).then(() => {throw err}))
   .then(s3Data => fs.remove(data.path).then(() => s3Data))
+}
+
+export const s3DeletePhotoFromURL = (url) => {
+  let [Key] = url.split('/').slice(-1)
+  return s3.deleteObject({ Key, Bucket: process.env.AWS_BUCKET}).promise()
 }
 
 export const pagerCreate = (model, populate='') => (req, query={}) => {
