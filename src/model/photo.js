@@ -2,6 +2,7 @@ import * as _ from 'ramda'
 import * as util from '../lib/util.js'
 import createError from 'http-errors'
 import Mongoose, {Schema} from 'mongoose'
+import {S3} from 'aws-sdk'
 
 const photoSchema = new Schema({
   url: {type: String, required: true},
@@ -99,9 +100,10 @@ Photo.update = function(req){
 
 Photo.delete = function(req){
   return Photo.findOneAndRemove({_id: req.params.id, owner: req.user._id})
-  .then(profile => {
-    if(!profile)
-      throw createError(404, 'NOT FOUND ERROR: profile not found')
+  .then(photo => {
+    if(!photo)
+      throw createError(404, 'NOT FOUND ERROR: photo not found')
+    return util.s3DeletePhotoFromURL(photo.url)
   })
 }
 

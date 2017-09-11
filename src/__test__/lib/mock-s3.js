@@ -21,5 +21,5 @@ AWS.mock('S3', 'deleteObject', (params, cb) => {
   if(!params.Key) 
     return cb(new Error('VALIDATION ERROR: requires Key'))
 
-  return cb(null, {})
+  return cb(null, { })
 })
