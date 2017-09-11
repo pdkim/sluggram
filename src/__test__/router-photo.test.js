@@ -165,7 +165,7 @@ describe('router-photo.test.js', () => {
     })
   })
 
-  describe.only('DELETE /api/photos/:id', () => {
+  describe('DELETE /api/photos/:id', () => {
     test('should delete a photo', () => {
       return mockPhoto()
       .then(mock => {
