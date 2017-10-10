@@ -22,6 +22,6 @@ export const mockProfile = () => {
   })
 }
 
-export const mockManyProfiles = (num=100) => {
+export const mockManyProfiles = (num=10) => {
   return Promise.all(_.map(() => mockProfile(), Array(num)))
 }
