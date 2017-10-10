@@ -17,8 +17,8 @@
     "watch": "nodemon index.js",
     "test": "jest --runInBand",
     "test-watch": "jest --runInBand --watchAll",
-    "db-on": "mkdir -p ./db && mongod --dbpath ./db",
-    "db-off": "killall mongod"
+    "dbon": "mkdir -p ./db && mongod --dbpath ./db",
+    "dboff": "killall mongod"
   },
   "dependencies": {
     "aws-sdk": "^2.92.0",
